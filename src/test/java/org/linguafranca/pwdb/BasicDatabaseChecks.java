@@ -82,6 +82,7 @@ public class BasicDatabaseChecks {
     public void testAddRemoveEntry() {
         Entry e1 = database.getRootGroup().addEntry(database.newEntry());
         e1.setTitle("entry1");
+//        e1.setProperty(name, value);
         List<Entry> l1 = database.findEntries("entry1");
         assertTrue(l1.size() == 1);
 

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="saveAESKey">
+		<span>key: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span> <span><input
+			type="text" name="key" value="${key}" readonly="readonly"
+			style="width: 200px" /></span><br> <span>keepass name:</span> <span><input
+			type="text" name="name" /></span><br> <input type="submit">
+	</form>
+</body>
+</html>

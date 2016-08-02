@@ -18,13 +18,16 @@ package org.linguafranca.pwdb;
 
 import org.junit.Test;
 import org.linguafranca.pwdb.kdbx.dom.DomDatabaseWrapper;
+import org.linguafranca.security.Encryption;
 import org.linguafranca.pwdb.Entry.Matcher;
 import org.linguafranca.pwdb.kdbx.KdbxCredentials;
 import org.linguafranca.pwdb.kdbx.KdbxStreamFormat;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -92,33 +95,54 @@ public class VisitorTest {
 	}
 
 	@Test
-    public void testMyKdbx(){
+	public void testMyKdbx() {
 		try {
-			String dbName = "/Users/zhanghl/.keepass/mydata.kdbx";
+			String dbName = "/Users/zhanghl/.keepass/mydata-test.kdbx";
 			InputStream inputStream = new FileInputStream(dbName);
 			DomDatabaseWrapper db;
 			String keyfile = "/Users/zhanghl/.Trash/myKey";
-			InputStream keyinputStream = new FileInputStream(keyfile );
-			db = new DomDatabaseWrapper(new KdbxStreamFormat(), new KdbxCredentials.KeyFile("110120".getBytes(), keyinputStream ), inputStream);
-//			db.visit(visitor);
-			
+			InputStream keyinputStream = new FileInputStream(keyfile);
+			KdbxCredentials.KeyFile credentials = new KdbxCredentials.KeyFile("110120".getBytes(), keyinputStream);
+			db = new DomDatabaseWrapper(new KdbxStreamFormat(),
+					credentials, inputStream);
+			// db.visit(visitor);
+
 			List<Entry> matched = db.findEntries(new Entry.Matcher() {
-				String matchee = "社保";
+				String matchee = "KeePassH".toLowerCase();
 
 				@Override
 				public boolean matches(Entry entry) {
 					return entry.getTitle().toLowerCase().contains(matchee)
-							|| entry.getNotes().toLowerCase().contains(matchee)
+//							|| entry.getNotes().toLowerCase().contains(matchee)
 							|| entry.getUsername().toLowerCase().contains(matchee);
 				}
 			});
 
 			for (Entry e : matched) {
 				System.out.println(e.getPassword() + "|" + e.getUsername());
+				System.out.println(e.getPropertyNames());
+				e.setProperty("AES Key: test123", "cccc");
 			}
-			
+//			 Entry newEntry = db.newEntry();
+//			 newEntry.setTitle("test add");
+//			 newEntry.setProperty("AES Key: ccc", Encryption.generateIv());
+//			 Entry e1 = db.getRootGroup().addEntry(newEntry);
+
+			List<Entry> l2 = db.findEntries("test add");
+			assertTrue(l2.size() == 1);
+			for (Entry entry : l2) {
+				System.out.println(entry.getTitle());
+			}
+
+//			OutputStream outputStream = new FileOutputStream(dbName);
+//			keyinputStream = new FileInputStream(keyfile);
+//			credentials = new KdbxCredentials.KeyFile("110120".getBytes(), keyinputStream);
+//			db.save(credentials, outputStream );
+
+			List<Entry> l = db.findEntries("http://www.iteye.com");
+			System.out.println(l.get(0).getUsername());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }

@@ -1,0 +1,9 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+server:
+  port: 19455
+keepass:
+  dbFile: /Users/zhanghl/.keepass/mydata-test.kdbx
+  keyFile: /Users/zhanghl/.Trash/myKey
